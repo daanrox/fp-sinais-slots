@@ -32,6 +32,31 @@ body{
     z-index: 50;
 }
 
+
+.roxa{
+    position: absolute;
+    top: 50%;
+    height: 150px;
+    z-index: 50;
+}
+
+.amarela{
+    position: absolute;
+    top: 60%;
+    right:0;
+    height: 300px;
+    z-index: 50;
+}
+
+.rosa{
+    display: none;
+    position: fixed;
+    top: 20%;
+    height: 120px;
+    z-index: 50;
+}
+
+
 @media screen and (max-width: 1024px){
     .verde{
         width: 150px
@@ -46,5 +71,23 @@ body{
     .azul{
         display:none;
     }
-    
+    .roxa{
+        position: fixed;
+        top: 80%;
+        height: 100px;
+    }
+
+    .amarela{
+        position: fixed;
+        top: 30%;
+        height: 200px;
+    }
+
+    .rosa{
+        display: block;
+    }
+}
+
+.folha{
+    pointer-events: none;
 }
