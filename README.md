@@ -29,9 +29,7 @@ O site foi desenvolvido utilizando as seguintes tecnologias:
 <div>
   <img align="center" src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" width="120" height="35"/>
   <img align="center" src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" width="120" height="35"/>
-  <img align="center" src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" width="120" height="35"/>
-  <img align="center" src="https://miro.medium.com/v2/resize:fit:644/1*8fmp_aFSf2KM2gu-hCIwdg.png" width="120" height="35"/>
-  
+  <img align="center" src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" width="120" height="35"/>  
 </div>
 
 Não foi utilizado nenhum framework ou biblioteca para o desenvolvimento deste projeto.
