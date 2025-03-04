@@ -39,6 +39,10 @@
     <meta name="developer-website" content="https://daanrox.com">
     <meta name="developer-contact" content="+5531992812273">
 
+    <script src="https://cdn.jsdelivr.net/npm/notiflix@3.2.8/dist/notiflix-aio-3.2.8.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
 </head>
 
 <body>
@@ -53,8 +57,341 @@
     </header>
     <main>
 
-    </main>
+        <div style="height: 61px; margin-bottom: 16px;"></div>
 
+
+        <div style="width: 95%; margin:0 auto; max-width: 1000px;">
+            <section id="carousel-container"
+                style="overflow: hidden; width: 100%; height: auto; position: relative; border-radius: 10px; box-shadow: black 0px 8px 15px;">
+                <div id="carousel" style="display: flex; transition: transform 0.5s ease-in-out; ">
+                </div>
+            </section>
+            <script>
+                const banners = [
+                    '/uploads/banner/1.png',
+                    '/uploads/banner/2.png',
+                    '/uploads/banner/3.png',
+                    '/uploads/banner/4.png'
+                ];
+            </script>
+        </div>
+        <script>
+            const carousel = document.getElementById('carousel');
+            const container = document.getElementById('carousel-container');
+
+            let currentIndex = 0;
+            let interval;
+            let startX = 0;
+            let isDragging = false;
+
+            banners.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.style.width = "100%";
+                img.style.flexShrink = "0";
+                img.style.objectFit = "cover";
+                img.style.height = "100%";
+                carousel.appendChild(img);
+            });
+
+            const firstClone = carousel.firstElementChild.cloneNode(true);
+            carousel.appendChild(firstClone);
+
+            function nextBanner() {
+                currentIndex++;
+                carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+                if (currentIndex === banners.length) {
+                    setTimeout(() => {
+                        carousel.style.transition = 'none';
+                        currentIndex = 0;
+                        carousel.style.transform = `translateX(0)`;
+                        setTimeout(() => carousel.style.transition = 'transform 0.5s ease-in-out', 50);
+                    }, 500);
+                }
+            }
+
+            function prevBanner() {
+                currentIndex = currentIndex > 0 ? currentIndex - 1 : banners.length - 1;
+                carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+            }
+
+            function startAutoSlide() {
+                interval = setInterval(nextBanner, 5000);
+            }
+
+            function resetAutoSlide() {
+                clearInterval(interval);
+                startAutoSlide();
+            }
+
+            container.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isDragging = true;
+            });
+
+            container.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                let moveX = e.touches[0].clientX - startX;
+
+                if (Math.abs(moveX) > 50) {
+                    if (moveX > 0) {
+                        prevBanner();
+                    } else {
+                        nextBanner();
+                    }
+                    isDragging = false;
+                    resetAutoSlide();
+                }
+            });
+
+            container.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+
+            container.addEventListener('mousedown', (e) => {
+                startX = e.clientX;
+                isDragging = true;
+            });
+
+            container.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                let moveX = e.clientX - startX;
+
+                if (Math.abs(moveX) > 50) {
+                    if (moveX > 0) {
+                        prevBanner();
+                    } else {
+                        nextBanner();
+                    }
+                    isDragging = false;
+                    resetAutoSlide();
+                }
+            });
+
+            container.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            startAutoSlide();
+        </script>
+
+
+        <div class="btns">
+
+            <img class="btn_instagram" src="/assets/btn_instagram.png" alt="Siga nosso Instagram Oficial"
+                onclick="window.open('https://instagram.com/daanrox', '_blank')" />
+            <div class="btn-atualizacao-container">
+                <img class="btn-atualizacao" src="/assets/btn-atualizacao.png" alt="Hora da última atualização">
+                <span class="texto-atualizacao">ÚLTIMA ATUALIZAÇÃO ÀS 14:50:00</span>
+            </div>
+
+        </div>
+
+
+
+        <div class="filter">
+            <div class="btn-filter">
+                <div class="hot">🔥 Hot</div>
+                <div class="new">✨ New</div>
+                <div class="all">🔥 All</div>
+            </div>
+            <div class="input-wrapper">
+                <input class="input-filter" type="text" placeholder="Buscar jogo..." onkeyup="searchGames()">
+            </div>
+        </div>
+
+        <section class="games-list" id="games-list">
+
+
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const apiUrl = "https://snakedasorte.com/api/get_games.php";
+                    let allGames = [];
+                    let filteredGames = [];
+                    Notiflix.Loading.standard();
+
+                    async function fetchGames() {
+                        try {
+                            const response = await fetch(apiUrl);
+                            const games = await response.json();
+                            Notiflix.Loading.remove();
+                            allGames = games.filter(game => game.provider === 'pg');
+                            filteredGames = [...allGames];
+                            renderGames(filteredGames);
+                            Notiflix.Notify.success('Jogos disponíveis');
+                        } catch (error) {
+                            console.error("Erro ao buscar os jogos:", error);
+                        }
+                    }
+
+                    function getColor(value) {
+                        return value <= 40 ? '#DC2626' : value < 70 ? '#EAB308' : '#22C55E';
+                    }
+
+                    function renderGames(games) {
+                        const gamesList = document.getElementById("games-list");
+                        gamesList.innerHTML = games.map(game => `
+            <div class="game-card" data-id="${game.id}" data-rtp="${game.rtp}" data-name="${game.nome.toLowerCase()}">
+                <div class="game-header" onclick="window.open('https://roxpremios.com/', '_blank')">
+                    <img src="${game.banner}" />
+                    <p>Distribuição: ${game.rtp}%</p>
+                    ${game.rtp > 90 ? ` <span>+90% <i class="fa-solid fa-fire-flame-curved"></i></span>` : game.rtp > 96 ? ` <span>HOT <i class="fa-solid fa-fire-flame-curved"></i></span>` : ``}
+                </div>
+                <div class="game-contain">
+                    <img class="background-image" src="${game.banner}" />
+                    <div class="game-data">
+                        <img src="${game.icon}" />
+                        <p>${game.nome}</p>
+                    </div>
+                    <div class="game-metrics">
+                        <p>Mínima: ${game.min}%</p>
+                        <span style="background: linear-gradient(to right, ${getColor(game.min)} ${game.min}%, #FAFAFA ${game.min}%);"></span>
+                        
+                        <p>Padrão: ${game.game_default}%</p>
+                        <span style="background: linear-gradient(to right, ${getColor(game.game_default)} ${game.game_default}%, #FAFAFA ${game.game_default}%);"></span>
+                        
+                        <p>Máxima: ${game.max}%</p>
+                        <span style="background: linear-gradient(to right, ${getColor(game.max)} ${game.max}%, #FAFAFA ${game.max}%);"></span>
+                    </div>
+
+                    ${game.rtp > 85 ? `<div class="checkout-button">
+
+                        ${["Fortune Rabbit", "Fortune Tiger", "Fortune Ox", "Fortune Mouse", "Fortune Dragon"].includes(game.nome) 
+                    ? `<button onclick="window.location.href='/gerar-sinais/${game.nome.toLowerCase().replace(' ', '-')}'">Gerar Sinal</button>` 
+                    : `<button onclick="window.open('https://roxpremios.com/', '_blank')">Jogue Agora</button>`}
+
+                    </div>` : `<div class="footer-card">
+                        <p>Mínima R$0,50 a R$2,40</p>
+                        <p>Padrão R$2,50 a R$8,00</p>
+                        <p>Máxima acima de R$10,00</p>
+                    </div>`}
+                    
+                    ${game.nome == 'Fortune Rabbit' ? `<button onclick="window.location.href='/demo/fortune-rabbit'">Teste Grátis</button>` : game.nome == 'Fortune Tiger' ? `<button onclick="window.location.href='/demo/fortune-tiger'">Teste Grátis</button>` : game.nome == 'Fortune Ox' ? `<button onclick="window.location.href='/demo/fortune-ox'">Teste Grátis</button>` : game.nome == 'Fortune Mouse' ? `<button onclick="window.location.href='/demo/fortune-mouse'">Teste Grátis</button>` : game.nome == 'Fortune Dragon' ? `<button onclick="window.location.href='/demo/fortune-dragon'">Teste Grátis</button>` : `<div class="footer-margin"> </div>`}
+                    
+                </div>
+            </div>
+        `).join("");
+                    }
+
+                    function filterGames(filter) {
+                        switch (filter) {
+                            case "hot":
+                                Notiflix.Notify.success('Exibindo Jogos HOT');
+                                filteredGames = allGames.filter(game => game.rtp > 85).sort((a, b) => b.rtp - a.rtp);
+                                break;
+                            case "new":
+                                Notiflix.Notify.success('Exibindo Jogos NEW');
+                                filteredGames = [...allGames].sort((a, b) => b.id - a.id).slice(0, 15);
+                                break;
+                            case "all":
+                                Notiflix.Notify.success('Exibindo todos os jogos');
+                                filteredGames = [...allGames];
+                                break;
+                        }
+                        renderGames(filteredGames);
+                    }
+
+                    function searchGames() {
+                        const searchInput = document.querySelector(".input-filter").value.toLowerCase();
+                        filteredGames = allGames.filter(game => game.nome.toLowerCase().includes(searchInput));
+                        renderGames(filteredGames);
+                    }
+
+                    document.querySelector(".input-filter").addEventListener("keyup", searchGames);
+                    document.querySelector(".hot").addEventListener("click", () => filterGames("hot"));
+                    document.querySelector(".new").addEventListener("click", () => filterGames("new"));
+                    document.querySelector(".all").addEventListener("click", () => filterGames("all"));
+
+                    fetchGames();
+                });
+            </script>
+
+
+        </section>>
+
+
+
+        <script>
+            Notiflix.Notify.init({
+                width: '280px',
+                position: 'right-bottom',
+                distance: '10px',
+                opacity: 1,
+                borderRadius: '5px',
+                rtl: false,
+                timeout: 3000,
+                messageMaxLength: 110,
+                backOverlay: false,
+                backOverlayColor: 'rgba(0,0,0,0.5)',
+                plainText: true,
+                showOnlyTheLastOne: false,
+                clickToClose: false,
+                pauseOnHover: true,
+
+                ID: 'NotiflixNotify',
+                className: 'notiflix-notify',
+                zindex: 4001,
+                fontFamily: 'Quicksand',
+                fontSize: '13px',
+                cssAnimation: true,
+                cssAnimationDuration: 400,
+                cssAnimationStyle: 'fade',
+                closeButton: false,
+                useIcon: true,
+                useFontAwesome: false,
+                fontAwesomeIconStyle: 'basic',
+                fontAwesomeIconSize: '34px',
+
+                success: {
+                    background: '#32c682',
+                    textColor: '#fff',
+                    childClassName: 'notiflix-notify-success',
+                    notiflixIconColor: 'rgba(0,0,0,0.2)',
+                    fontAwesomeClassName: 'fas fa-check-circle',
+                    fontAwesomeIconColor: 'rgba(0,0,0,0.2)',
+                    backOverlayColor: 'rgba(50,198,130,0.2)',
+                },
+
+                failure: {
+                    background: '#ff5549',
+                    textColor: '#fff',
+                    childClassName: 'notiflix-notify-failure',
+                    notiflixIconColor: 'rgba(0,0,0,0.2)',
+                    fontAwesomeClassName: 'fas fa-times-circle',
+                    fontAwesomeIconColor: 'rgba(0,0,0,0.2)',
+                    backOverlayColor: 'rgba(255,85,73,0.2)',
+                },
+
+                warning: {
+                    background: '#eebf31',
+                    textColor: '#fff',
+                    childClassName: 'notiflix-notify-warning',
+                    notiflixIconColor: 'rgba(0,0,0,0.2)',
+                    fontAwesomeClassName: 'fas fa-exclamation-circle',
+                    fontAwesomeIconColor: 'rgba(0,0,0,0.2)',
+                    backOverlayColor: 'rgba(238,191,49,0.2)',
+                },
+
+                info: {
+                    background: '#26c0d3',
+                    textColor: '#fff',
+                    childClassName: 'notiflix-notify-info',
+                    notiflixIconColor: 'rgba(0,0,0,0.2)',
+                    fontAwesomeClassName: 'fas fa-info-circle',
+                    fontAwesomeIconColor: 'rgba(0,0,0,0.2)',
+                    backOverlayColor: 'rgba(38,192,211,0.2)',
+                },
+            });
+
+
+
+            // Notiflix.Notify.success('Sol lucet omnibus');
+            // Notiflix.Loading.standard();
+            // Notiflix.Loading.remove(1923);
+        </script>
+
+    </main>
     <footer>
         <div>
 

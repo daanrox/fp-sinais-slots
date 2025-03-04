@@ -1,93 +1,96 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+* {
+  margin: 0;
+  padding: 0;
+  border: none;
+  box-sizing: border-box;
+  font-family: ui-sans-serif, system-ui, sans-serif, Apple Color Emoji,
+    Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
 }
 
-
-
-body{
-    background-image: url(/assets/bg.png);
-    background-position: center;
-    background-size: cover;
-    background-attachment: fixed;
+body {
+  background-image: url(/assets/bg.png);
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
-
-
-.verde{
-    position: absolute;
-    top: 61px;
-    width: 180px;
-    z-index: 50;
+img {
+  user-drag: none;
+  user-select: none;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-
-.azul{
-    position: absolute;
-    top: 40px;
-    right: 0;
-    height: 200px;
-    z-index: 50;
+.verde {
+  position: absolute;
+  top: 61px;
+  width: 180px;
+  z-index: 50;
 }
 
-
-.roxa{
-    position: absolute;
-    top: 50%;
-    height: 150px;
-    z-index: 50;
+.azul {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  height: 200px;
+  z-index: 50;
 }
 
-.amarela{
-    position: absolute;
-    top: 60%;
-    right:0;
-    height: 300px;
-    z-index: 50;
+.roxa {
+  position: absolute;
+  top: 50%;
+  height: 150px;
+  z-index: 50;
 }
 
-.rosa{
+.amarela {
+  position: absolute;
+  top: 60%;
+  right: 0;
+  height: 300px;
+  z-index: 50;
+}
+
+.rosa {
+  display: none;
+  position: fixed;
+  top: 20%;
+  height: 120px;
+  z-index: 50;
+}
+
+@media screen and (max-width: 1024px) {
+  .verde {
+    width: 150px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .verde {
     display: none;
+  }
+  .azul {
+    display: none;
+  }
+  .roxa {
     position: fixed;
-    top: 20%;
-    height: 120px;
-    z-index: 50;
+    top: 80%;
+    height: 100px;
+  }
+
+  .amarela {
+    position: fixed;
+    top: 30%;
+    height: 200px;
+  }
+
+  .rosa {
+    display: block;
+  }
 }
 
-
-@media screen and (max-width: 1024px){
-    .verde{
-        width: 150px
-    }
-    
-}
-
-@media screen and (max-width: 768px){
-    .verde{
-        display: none;
-    }
-    .azul{
-        display:none;
-    }
-    .roxa{
-        position: fixed;
-        top: 80%;
-        height: 100px;
-    }
-
-    .amarela{
-        position: fixed;
-        top: 30%;
-        height: 200px;
-    }
-
-    .rosa{
-        display: block;
-    }
-}
-
-.folha{
-    pointer-events: none;
+.folha {
+  pointer-events: none;
 }
